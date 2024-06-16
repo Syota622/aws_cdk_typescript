@@ -9,5 +9,7 @@ const app = new cdk.App();
 const vpcStack = new MyVpcProjectStack(app, 'MyVpcProjectStack');
 new MyS3BucketStack(app, 'MyS3BucketStack');
 new MyEc2Stack(app, 'MyEc2Stack', {
-  vpcId: vpcStack.vpcId
+  // vpcId: vpcStack.vpcId,
+  publicSubnetId: vpcStack.publicSubnetId
+  // privateSubnetId: vpcStack.privateSubnetId
 });

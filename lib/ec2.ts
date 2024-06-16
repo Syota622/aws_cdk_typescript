@@ -1,9 +1,10 @@
 import * as cdk from 'aws-cdk-lib';
 import { Construct } from 'constructs';
 import * as ec2 from 'aws-cdk-lib/aws-ec2';
+import * as iam from 'aws-cdk-lib/aws-iam';
 
 interface MyEc2StackProps extends cdk.StackProps {
-  vpcId: string;
+  publicSubnetId: string;
 }
 
 export class MyEc2Stack extends cdk.Stack {
@@ -13,17 +14,19 @@ export class MyEc2Stack extends cdk.Stack {
     const projectName = 'cdk';
     const envName = 'prod';
 
-    // VPCの取得
-    const vpc = ec2.Vpc.fromVpcAttributes(this, `${projectName}-vpc-${envName}`, {
-      vpcId: props.vpcId,
-      availabilityZones: cdk.Stack.of(this).availabilityZones
+    // SSM用のIAMロールを作成
+    const role = new iam.Role(this, `${projectName}-ec2-role-${envName}`, {
+      assumedBy: new iam.ServicePrincipal('ec2.amazonaws.com'),
     });
+
+    role.addManagedPolicy(iam.ManagedPolicy.fromAwsManagedPolicyName('AmazonSSMManagedInstanceCore'));
 
     // EC2インスタンスを作成 (L1リソース)
     const instance = new ec2.CfnInstance(this, `${projectName}-instance-${envName}`, {
-      instanceType: 't2.micro',
+      instanceType: 't3.micro',
       imageId: new ec2.AmazonLinuxImage().getImage(this).imageId,
-      subnetId: vpc.publicSubnets[0].subnetId,
+      iamInstanceProfile: role.roleName,
+      subnetId: props.publicSubnetId, // 取得したパブリックサブネットIDを使用
       keyName: 'my-key-pair' // 既存のキーペア名を指定
     });
 

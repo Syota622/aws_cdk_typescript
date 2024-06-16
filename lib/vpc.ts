@@ -5,6 +5,8 @@ import * as ec2 from 'aws-cdk-lib/aws-ec2';
 export class MyVpcProjectStack extends cdk.Stack {
   // vpcIdを公開するためのプロパティ
   public readonly vpcId: string;
+  public readonly publicSubnetId: string;
+  public readonly privateSubnetId: string;
 
   constructor(scope: Construct, id: string, props?: cdk.StackProps) {
     super(scope, id, props);
@@ -81,5 +83,8 @@ export class MyVpcProjectStack extends cdk.Stack {
 
     // VPC IDの公開
     this.vpcId = vpc.ref;
+    // サブネットIDの公開
+    this.publicSubnetId = publicSubnet.ref;
+    this.privateSubnetId = privateSubnet.ref;
   }
 }
