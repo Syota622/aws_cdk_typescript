@@ -3,6 +3,9 @@ import { Construct } from 'constructs';
 import * as ec2 from 'aws-cdk-lib/aws-ec2';
 
 export class MyVpcProjectStack extends cdk.Stack {
+  // vpcIdを公開するためのプロパティ
+  public readonly vpcId: string;
+
   constructor(scope: Construct, id: string, props?: cdk.StackProps) {
     super(scope, id, props);
 
@@ -76,15 +79,7 @@ export class MyVpcProjectStack extends cdk.Stack {
       gatewayId: igw.ref
     });
 
-    // 出力: VPC ID
-    new cdk.CfnOutput(this, `${projectName}-vpc-id-${envName}`, { value: vpc.ref });
-    // 出力: パブリックサブネットID
-    new cdk.CfnOutput(this, `${projectName}-public-subnet-id-${envName}`, { value: publicSubnet.ref });
-    // 出力: プライベートサブネットID
-    new cdk.CfnOutput(this, `${projectName}-private-subnet-id-${envName}`, { value: privateSubnet.ref });
-    // 出力: パブリックルートテーブルID
-    new cdk.CfnOutput(this, `${projectName}-public-route-table-id-${envName}`, { value: publicRouteTable.ref });
-    // 出力: プライベートルートテーブルID
-    new cdk.CfnOutput(this, `${projectName}-private-route-table-id-${envName}`, { value: privateRouteTable.ref });
+    // VPC IDの公開
+    this.vpcId = vpc.ref;
   }
 }
