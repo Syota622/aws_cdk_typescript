@@ -6,3 +6,6 @@ diffを実行すると、cloudformationのテンプレートの差分が表示�
 
 - cdk deploy
 deployを実行すると、cloudformationのテンプレートがデプロイされる
+
+- cdk deploy MyVpcStack --debug
+--debugを指定すると、デプロイの過程で実行されるawsコマンドが表示される

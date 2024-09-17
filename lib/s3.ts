@@ -8,10 +8,11 @@ export class S3Stack extends cdk.Stack {
 
     // S3バケットの作成
     const bucket = new s3.Bucket(this, 'MyFirstBucket', {
+      bucketName: 'my-first-bucket-cdk-test',
       versioned: false,
       encryption: s3.BucketEncryption.S3_MANAGED,
-      removalPolicy: cdk.RemovalPolicy.RETAIN,
-      autoDeleteObjects: false,
+      removalPolicy: cdk.RemovalPolicy.DESTROY,
+      autoDeleteObjects: true,
       publicReadAccess: false,
       blockPublicAccess: s3.BlockPublicAccess.BLOCK_ALL,
     });
